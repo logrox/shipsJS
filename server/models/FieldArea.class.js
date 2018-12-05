@@ -1,6 +1,6 @@
 class FieldAreaClass {
 
-    constructor(props) {
+    constructor() {
 
         //Zawiera obiekt militarny znajdują się na tym obszarze
         this.objectInArea = null;
@@ -27,14 +27,14 @@ class FieldAreaClass {
         // wywołuje zdarzenie na modyfikatorze i obiekcie
         // może to być np. ostrzelanie obszaru
 
-        if (!this.modifier) {
+        if (this.modifier) {
             // sprawdzenie czy na modyfikator wpływa event
             this.modifier.checkActionEvent(objectEvent);
 
             //przypisanie modyfikatora do obszaru, modyfikator mógł zostać zniszczony wieć getInstance() zwróci null
             this.modifier = this.modifier.getInstance();
         }
-        if (!this.objectInArea) {
+        if (this.objectInArea) {
             // sprawdzenie czy na obiekt wpływa event
             this.objectInArea.checkActionEvent(objectEvent);
 
@@ -60,7 +60,9 @@ class FieldAreaClass {
 
             //Wykonanie akcji związanej z modyfikatorami np mina, maskowanie(zasłona dymna)
             this.__checkModifier();
-
+            if (this.objectInArea) {
+                this.objectInArea.setInFieldArea(this);
+            }
         }
 
 
@@ -99,7 +101,13 @@ class FieldAreaClass {
 
 
     }
-    getOwner(){
+
+    computedDistance(fieldAreaClass){
+        //obliczanie odległości między fieldAreaClass a this
+        return 0;
+    }
+
+    getOwner() {
         return this.owner;
     }
 

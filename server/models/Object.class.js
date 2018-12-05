@@ -1,3 +1,5 @@
+const EventClass = require('./Event.class');
+
 class ObjectClass {
 
     constructor(props) {
@@ -21,17 +23,23 @@ class ObjectClass {
         //rozmiar na planszy gry
         this.size = props.size || 1;
 
-        this.weapon = props.weapon || [];
+        this.weapons = props.weapons || [];
 
         if (!props.owner) {
             throw new Error('props "owner" is required');
         }
         this.__owner = props.owner;
 
+        this.__fieldAreaClass = null;
+
+    }
+
+    setInFieldArea(fieldAreaClass) {
+        this.__fieldAreaClass = fieldAreaClass;
     }
 
     addWeapon(weaponClass) {
-        this.weapon.push(weaponClass);
+        return this.weapons.push(weaponClass) - 1;
     }
 
     checkActionEvent(objectEvent) {
@@ -48,6 +56,28 @@ class ObjectClass {
 
     }
 
+    createShot(indexWeapon, fieldAreaClass) {
+        const weaponClass = this.weapons[indexWeapon];
+        if (!weaponClass) {
+            throw new Error(`Not find Weapon in index ${indexWeapon}`);
+        }
+
+        //todo sprawdzenie dystansu do atakowanego pola gry, return > 0 to za dalego
+
+        if (this.__fieldAreaClass.computedDistance(fieldAreaClass) > 0) {
+            return false;
+        }
+
+        const eventClass_shot = new EventClass({
+            shield: weaponClass.shield,
+            cuirass: weaponClass.cuirass,
+            owner: this.getOwner()
+        });
+
+        fieldAreaClass.propagateEvent(eventClass_shot);
+        return true;
+    }
+
     render(ownerClass) {
 
         if (ownerClass.getOwner() === this.getOwner()) {
@@ -57,11 +87,11 @@ class ObjectClass {
                 cuirass: this.cuirass,
                 shield: this.shield,
                 rangeView: this.rangeView,
-                weapon:this.weapon
+                weapon: this.weapons
             }
         }
 
-        return{
+        return {
             name: this.name,
             owner: this.getOwner(),
             cuirass: this.cuirass,
@@ -72,19 +102,5 @@ class ObjectClass {
 
 }
 
-class WeaponClass {
 
-    constructor(props) {
-        this.cuirass = props.cuirass;
-        this.shield = props.shield;
-        this.rangeAttack = props.rangeAttack;
-    }
-
-
-
-}
-
-module.exports = {
-    ObjectClass,
-    WeaponClass
-};
+module.exports = ObjectClass;
