@@ -11,8 +11,8 @@ class FieldAreaClass {
         //Zawiera informacje o właścicielu obszaru
         this.owner = null;
 
-        //Czy obiekt jest pokazywany innym graczom
-        this.hiddenAll = true;
+        //Czy obiekt jest ukrywany przed innymi graczami
+        this.hiddenAll = false;
 
     }
 
@@ -62,6 +62,7 @@ class FieldAreaClass {
             this.__checkModifier();
             if (this.objectInArea) {
                 this.objectInArea.setInFieldArea(this);
+                this.owner = this.objectInArea.getOwner();
             }
         }
 
@@ -87,7 +88,7 @@ class FieldAreaClass {
     addModifier(modifierClass) {
 
 
-        //Sprawdzenie czy pole nalezy do innego gracza jeśli jest wolne to można modyfikować albo samemu jest się włścicielem
+        //Sprawdzenie czy pole nalezy do innego gracza jeśli jest wolne to można modyfikować albo gdy samemu jest się włścicielem
         if (this.__checkOwner(modifierClass) && this.modifier === null) {
             // dodanie modyfikatora do obszaru
             this.modifier = modifierClass;

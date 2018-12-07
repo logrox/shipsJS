@@ -77,7 +77,7 @@ class BombClass extends ModifierClass {
             cuirass: props.cuirass,
             shield: props.shield,
         });
-        this.__event = new EventClass({cuirass: props.cuirass});
+        this.__event = new EventClass({cuirass: props.cuirass, owner:props.owner});
     }
 
     checkActionObject(objectClass) {
