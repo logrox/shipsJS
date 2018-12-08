@@ -8,6 +8,7 @@ const OwnerClass = require('./server/models/Owner.class');
 const WeaponClass = require('./server/models/Weapon.class');
 const FieldAreaClass = require('./server/models/FieldArea.class');
 const {BombClass, SmokescreenClass} = require('./server/models/Modifier.class');
+const AreaClass = require('./server/models/Area.class');
 
 server.listen(80);
 
@@ -34,15 +35,17 @@ io.on('connection', function (socket) {
     });
 });
 
+const gameArea = new AreaClass(100, 100);
 
-const fieldAreaClass_1x1 = new FieldAreaClass();
-const fieldAreaClass_1x2 = new FieldAreaClass();
+const fieldAreaClass_1x1 = gameArea.getFieldAreaClass(0, 1);
+const fieldAreaClass_1x2 = gameArea.getFieldAreaClass(4, 3);
 
 let Gamer1 = new OwnerClass({name: "Gamer1"});
 let Gamer2 = new OwnerClass({name: "Gamer2"});
 
 const weaponClass_dzialo0 = new WeaponClass({
     shield: 3,
+    rangeAttack:4
 });
 
 //-----------Pojazd 1
@@ -65,14 +68,14 @@ const smokescreenClass0 = new SmokescreenClass({
 
 const indexWeapon = objectClass_pojazd1.addWeapon(weaponClass_dzialo0);
 fieldAreaClass_1x1.addObject(objectClass_pojazd1);
-fieldAreaClass_1x1.addModifier(smokescreenClass0);
+//fieldAreaClass_1x1.addModifier(smokescreenClass0);
 
 
 //------------ Pojazd 2
 const objectClass_pojazd2 = new ObjectClass({
     owner: Gamer2,
     cuirass: 5,
-    shield: 8,
+    shield: 5,
     name: "Pojazd gracza 2",
 });
 
@@ -81,7 +84,7 @@ fieldAreaClass_1x2.addObject(objectClass_pojazd2);
 //-------------
 
 
-if (fieldAreaClass_1x2.addModifier(bomb0)) {
+if (gameArea.getFieldAreaClass(0, 1).addModifier(bomb0)) {
     console.log('udalo sie dodac bombe na pole gracza')
 } else {
     console.log('Blad dodawania bomby')
@@ -92,15 +95,12 @@ if (fieldAreaClass_1x2.addModifier(bomb0)) {
 
 function run() {
 
-    objectClass_pojazd1.createShot(indexWeapon, fieldAreaClass_1x2);
+    const hit = objectClass_pojazd1.createShot(indexWeapon, fieldAreaClass_1x2);
+    console.log("hit:", hit);
     fieldAreaClass_1x1.lifeCircle();
 
-    //broń po wystrzale nie ma mocy brak efektu
-    objectClass_pojazd1.createShot(indexWeapon, fieldAreaClass_1x2);
-    fieldAreaClass_1x1.lifeCircle();
 
     const render = {
-        weaponClass_dzialo0,
         'pole 1 - gracz 1': fieldAreaClass_1x1.render(Gamer1),
         'pole 1 - gracz 2': fieldAreaClass_1x1.render(Gamer2),
 

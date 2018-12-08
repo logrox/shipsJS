@@ -62,9 +62,9 @@ class ObjectClass {
             throw new Error(`Not find Weapon in index ${indexWeapon}`);
         }
 
-        //todo sprawdzenie dystansu do atakowanego pola gry, return > 0 to za dalego
-
-        if (this.__fieldAreaClass.computedDistance(fieldAreaClass) > 0) {
+        //todo sprawdzenie dystansu do atakowanego pola
+        let computedDistance = this.__fieldAreaClass.computedDistance(fieldAreaClass);
+        if (computedDistance.x >  weaponClass.rangeAttack || computedDistance.y >  weaponClass.rangeAttack) {
             return false;
         }
 

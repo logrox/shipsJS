@@ -1,6 +1,7 @@
 class FieldAreaClass {
 
-    constructor() {
+
+    constructor(axis) {
 
         //Zawiera obiekt militarny znajdują się na tym obszarze
         this.objectInArea = null;
@@ -13,6 +14,11 @@ class FieldAreaClass {
 
         //Czy obiekt jest ukrywany przed innymi graczami
         this.hiddenAll = false;
+
+        this.__axis = {
+            x: axis.x,
+            y: axis.y
+        };
 
     }
 
@@ -94,18 +100,30 @@ class FieldAreaClass {
             this.modifier = modifierClass;
 
             // wykonanie akcje związane z modyfikatorem
-            this.__checkModifier()
+            this.__checkModifier();
+
+            return true;
 
         }
 
-        return this.modifier;
+        return false;
 
 
     }
 
-    computedDistance(fieldAreaClass){
-        //obliczanie odległości między fieldAreaClass a this
-        return 0;
+    getCoordinate() {
+        return this.__axis;
+    }
+
+    //obliczanie odległości między fieldAreaClass a this
+    computedDistance(fieldAreaClass) {
+
+        const coordinate = fieldAreaClass.getCoordinate();
+
+        return {
+            x: Math.abs(coordinate.x - this.__axis.x),
+            y: Math.abs(coordinate.y - this.__axis.y)
+        };
     }
 
     getOwner() {
