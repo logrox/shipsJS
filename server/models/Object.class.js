@@ -23,7 +23,8 @@ class ObjectClass {
         //rozmiar na planszy gry
         this.size = props.size || 1;
 
-        this.weapons = props.weapons || [];
+        this.maxWeapons = props.maxWeapons || 0;
+        this.weapons = [];
 
         if (!props.owner) {
             throw new Error('props "owner" is required');
@@ -62,17 +63,30 @@ class ObjectClass {
             throw new Error(`Not find Weapon in index ${indexWeapon}`);
         }
 
-        //todo sprawdzenie dystansu do atakowanego pola
+        //sprawdzenie dystansu do atakowanego pola
         let computedDistance = this.__fieldAreaClass.computedDistance(fieldAreaClass);
-        if (computedDistance.x >  weaponClass.rangeAttack || computedDistance.y >  weaponClass.rangeAttack) {
+        if (computedDistance.x > weaponClass.rangeAttack || computedDistance.y > weaponClass.rangeAttack) {
             return false;
         }
 
+        //sprawdzenie czy bron ma amunicję, gdy 0 to pusta
+        let magazine = weaponClass.getMagazine();
+        if (magazine === 0) {
+            return false;
+        }
+
+        // tworzenie zdarzenia
         const eventClass_shot = new EventClass({
             shield: weaponClass.shield,
             cuirass: weaponClass.cuirass,
             owner: this.getOwner()
         });
+
+        //Gdy po odjęciu z magazynku naboju(łuski) są jeszcze naboje to załaduj kolejny
+        // poniewarz po strzale EventClass odejmuje (cuirass,shield)
+        if (weaponClass.setMagazine(-1)) {
+            weaponClass.load();
+        }
 
         fieldAreaClass.propagateEvent(eventClass_shot);
         return true;

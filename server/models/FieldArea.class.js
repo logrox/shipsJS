@@ -22,8 +22,9 @@ class FieldAreaClass {
 
     }
 
-    lifeCircle() {
-        if (this.modifier) {
+    //Początek tury gracza,usunięcie wszystich modyfikatorów którym został 1 cykl zycia
+    lifeCircle(ownerClass) {
+        if (this.owner === ownerClass && this.modifier) {
             this.modifier.lifeCircle(this);
             this.modifier = this.modifier.getInstance();
         }
