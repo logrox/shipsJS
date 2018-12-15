@@ -17,13 +17,14 @@ class ObjectClass {
         // zasięg widzenia
         this.rangeView = props.rangeView || 0;
 
-        // liczba ruchów na akcję
-        this.move = props.move || 0;
+        // zasięg ruchu na akcję
+        this.rangeMove = props.rangeMove || 0;
 
         //rozmiar na planszy gry
         this.size = props.size || 1;
-
-        this.maxWeapons = props.maxWeapons || 0;
+        // maksymalna liczba możliwych w posiadaniu broni
+        this.__maxWeapons = props.maxWeapons || 0;
+        //Lista posiadanych broni
         this.weapons = [];
 
         if (!props.owner) {
@@ -33,13 +34,28 @@ class ObjectClass {
 
         this.__fieldAreaClass = null;
 
+        this.__owner.addObject(this);
+
     }
 
     setInFieldArea(fieldAreaClass) {
         this.__fieldAreaClass = fieldAreaClass;
     }
+    getFieldArea() {
+        return this.__fieldAreaClass
+    }
 
     addWeapon(weaponClass) {
+        if (weaponClass.getOwner() !== this.__owner) {
+            console.error('bad owner');
+            return -1;
+        }
+
+        if(this.weapons.length >= this.__maxWeapons){
+            console.error('full weapons');
+            return -1;
+        }
+
         return this.weapons.push(weaponClass) - 1;
     }
 

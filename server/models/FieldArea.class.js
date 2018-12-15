@@ -156,8 +156,17 @@ class FieldAreaClass {
         // sprawdzenie akcji zwiazanych z modyfikatorem
         this.modifier.checkActionObject(objectClass);
 
+        // sprawdzenie akcji zwiazanych z tym polem
+        this.modifier.checkActionField(this);
+
         //przypisanie modyfikatora do obszaru, modyfikator mógł zostać zniszczony wieć getInstance() zwróci null
         this.modifier = this.modifier.getInstance();
+        if(this.modifier){
+            const owner = this.modifier.getOwner();
+            // Dodanie do właściciela informacji że na tym polu znajduje się modyfikator aby ten mógł potem wykonać na polu
+            // czynności związane z cyklem zycia;
+            owner.addLifeCircle(this);
+        }
 
         //zwraca instancje obiektu - o ile już nie został zniszczony przez modifier wtedy zwracane jest null;
         this.objectInArea = objectClass.getInstance();
@@ -172,6 +181,7 @@ class FieldAreaClass {
 
         if (this.__checkOwner(ownerClass)) {
             return {
+                axis: this.__axis,
                 object: this.objectInArea,
                 modifier: this.modifier
             }
@@ -179,12 +189,14 @@ class FieldAreaClass {
 
         if (this.hiddenAll) {
             return {
+                axis: this.__axis,
                 object: null,
                 modifier: null
             }
         }
 
         return {
+            axis: this.__axis,
             object: this.objectInArea,
             modifier: null
         }

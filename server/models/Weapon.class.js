@@ -1,6 +1,10 @@
 class WeaponClass {
 
-    constructor(props) {
+    constructor(props = {}) {
+        if (!props.owner) {
+            throw new Error('props "owner" is required');
+        }
+        this.__owner = props.owner || 0;
         this.cuirass = props.cuirass || 0;
         this.shield = props.shield || 0;
         this.rangeAttack = props.rangeAttack || 1;
@@ -15,6 +19,9 @@ class WeaponClass {
         }
     }
 
+    getOwner(){
+        return this.__owner;
+    }
 
     getMagazine() {
         return this.__magazine;

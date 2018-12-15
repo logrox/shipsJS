@@ -44,6 +44,9 @@ class ModifierClass {
     checkActionEvent() {
     }
 
+    checkActionField(fieldAreaClass){
+    }
+
 }
 
 
@@ -59,6 +62,10 @@ class SmokescreenClass extends ModifierClass {
             shield: NaN,
             lifeCircle: props.lifeCircle
         });
+    }
+
+    checkActionField(fieldAreaClass){
+        fieldAreaClass.hiddenAll = this.__lifeCircle > 0;
     }
 
     lifeCircle(fieldAreaClass) {
