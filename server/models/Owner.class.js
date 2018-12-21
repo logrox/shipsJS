@@ -22,14 +22,19 @@ class OwnerClass {
         this.__lifeCircleRefFieldArea.forEach(value => {
             value.lifeCircle(ownerClass);
         });
+        this.action = this.objects.length;
     }
 
     __setMaxAction(count) {
         this.__maxAction += count;
     }
 
-    getAction() {
-        return this.action;
+    setGold(count) {
+        this.gold += count;
+    }
+
+    setAction(count) {
+        this.action += count;
     }
 
     getOwner() {

@@ -26,6 +26,7 @@ class ObjectClass {
         this.__maxWeapons = props.maxWeapons || 0;
         //Lista posiadanych broni
         this.weapons = [];
+        //todo Dodać liste z minami,zasłonami
 
         if (!props.owner) {
             throw new Error('props "owner" is required');
