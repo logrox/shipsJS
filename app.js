@@ -11,7 +11,7 @@ const {BombClass, SmokescreenClass} = require('./server/models/Modifier.class');
 const AreaClass = require('./server/models/Area.class');
 const GameClass = require('./server/models/Game.class');
 
-const Area = require('./server/api/area');
+const apiArea = require('./server/api/area');
 
 server.listen(80);
 
@@ -31,23 +31,12 @@ app.get('/', function (req, res) {
     res.redirect('/index.html');
 });
 
-const gameSocket = io.of('game');
-gameSocket.on('connect', (socket) => {
-    //socket.emit('area:get', {hello: 'world game'});
-    socket.on('area', function (data) {
-        console.log('test');
-        let method1 = data.method.toString().toLowerCase();
-        Area[method1](data.payload).then(value => {
-            socket.emit(`area:${data.method}`, value);
-        })
-    });
-});
-
 
 io.on('connection', function (socket) {
     //socket.emit('news', {hello: 'world connection'});
     socket.on('my other event', function (data) {
         console.log(49, data);
+        socket.emit('area:get', [{test: "ups ok"}]);
         socket.emit('news', ["dzila"])
     });
 
@@ -58,12 +47,12 @@ const gameArea = new AreaClass(10, 10);
 
 let Gamer1 = new OwnerClass({name: "Gamer1"});
 let Gamer2 = new OwnerClass({name: "Gamer2"});
-
+console.log(Gamer1.uuid);
+console.log(Gamer2.uuid);
 const gameClass = new GameClass({
     area: gameArea,
     owners: [Gamer1, Gamer2]
 });
-
 //--------------------
 
 const F_0_0 = gameArea.getFieldAreaClass(0, 0);
@@ -123,10 +112,15 @@ gameClass.action_move(okret_1_1, 0, 3);
 gameClass.lifeCircle(Gamer2);
 gameClass.action_shot(okret_2_1, wIndex, 0, 3);
 
-const renderGamer1 = gameClass.render(Gamer1);
-const renderGamer2 = gameClass.render(Gamer2);
-debugger
+// const renderGamer1 = gameClass.render(Gamer1);
+ const renderGamer2 = gameClass.render(Gamer2);
 
+
+const area = new apiArea({
+    io,
+    gameClass,
+    prefix: 'game'
+});
 
 /*
 

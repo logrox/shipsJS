@@ -182,8 +182,8 @@ class FieldAreaClass {
         if (this.__checkOwner(ownerClass)) {
             return {
                 axis: this.__axis,
-                object: this.objectInArea,
-                modifier: this.modifier
+                object: this.objectInArea ? this.objectInArea.render(ownerClass) : null,
+                modifier: this.modifier ? this.modifier.render(ownerClass) : null,
             }
         }
 
@@ -197,7 +197,7 @@ class FieldAreaClass {
 
         return {
             axis: this.__axis,
-            object: this.objectInArea,
+            object: this.objectInArea ? this.objectInArea.render(ownerClass) : null,
             modifier: null
         }
     }

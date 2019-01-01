@@ -39,7 +39,14 @@ class WeaponClass {
         return false;
     }
 
-
+    render(){
+        return{
+            cuirass:this.cuirass,
+            shield:this.shield,
+            rangeAttack:this.rangeAttack,
+            magazine:this.getMagazine(),
+        }
+    }
 }
 
 module.exports = WeaponClass;

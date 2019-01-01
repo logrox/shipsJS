@@ -52,7 +52,7 @@ class ObjectClass {
             return -1;
         }
 
-        if(this.weapons.length >= this.__maxWeapons){
+        if (this.weapons.length >= this.__maxWeapons) {
             console.error('full weapons');
             return -1;
         }
@@ -114,17 +114,17 @@ class ObjectClass {
         if (ownerClass.getOwner() === this.getOwner()) {
             return {
                 name: this.name,
-                owner: this.getOwner(),
+                owner: this.getOwner().uuid,
                 cuirass: this.cuirass,
                 shield: this.shield,
                 rangeView: this.rangeView,
-                weapon: this.weapons
+                weapon: this.weapons.length > 0 ? this.weapons.map(weapon => weapon.render()) : this.weapons
             }
         }
 
         return {
             name: this.name,
-            owner: this.getOwner(),
+            owner: this.getOwner().uuid,
             cuirass: this.cuirass,
             shield: this.shield,
         }

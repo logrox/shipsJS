@@ -86,7 +86,8 @@ class GameClass {
         });
     }
 
-    getOwners(ownerClass) {
+    getOwner(uuid) {
+        return this.__owners.find(value => value.getOwner().uuid === uuid) || null;
     }
 
     getFields(ownerClass) {

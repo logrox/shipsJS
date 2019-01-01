@@ -1,3 +1,5 @@
+const uuid = require('../helpers/uuid');
+
 class OwnerClass {
 
 
@@ -9,6 +11,7 @@ class OwnerClass {
         this.action = 1;
         //Lista posiadanych obiektów
         this.objects = [];
+        this.uuid = uuid();
 
         this.__lifeCircleRefFieldArea = [];
 

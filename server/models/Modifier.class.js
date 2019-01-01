@@ -44,7 +44,23 @@ class ModifierClass {
     checkActionEvent() {
     }
 
-    checkActionField(fieldAreaClass){
+    checkActionField(fieldAreaClass) {
+    }
+
+    render(ownerClass) {
+        if (ownerClass.getOwner() === this.getOwner()) {
+            return {
+                owner: this.getOwner().uuid,
+                shield: this.__shield,
+                cuirass: this.__cuirass,
+                lifeCircle: this.__lifeCircle,
+                name: this.__name
+            }
+        }
+        return {
+            owner: null
+        }
+
     }
 
 }
@@ -64,7 +80,7 @@ class SmokescreenClass extends ModifierClass {
         });
     }
 
-    checkActionField(fieldAreaClass){
+    checkActionField(fieldAreaClass) {
         fieldAreaClass.hiddenAll = this.__lifeCircle > 0;
     }
 
@@ -84,7 +100,7 @@ class BombClass extends ModifierClass {
             cuirass: props.cuirass,
             shield: props.shield,
         });
-        this.__event = new EventClass({cuirass: props.cuirass, owner:props.owner});
+        this.__event = new EventClass({cuirass: props.cuirass, owner: props.owner});
     }
 
     checkActionObject(objectClass) {
