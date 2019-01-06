@@ -13,10 +13,13 @@ class buttonUuidComponent extends HTMLElement {
 
         button.addEventListener("click", evt => {
 
+            getArea(input.value, (response, dateTimeChange) => {
 
-            getArea(input.value, ([response]) => {
                 const event = new CustomEvent("getUuid", {
-                    detail: response
+                    detail: {
+                        ...response,
+                        payload: {uuid: input.value, dateTimeChange}
+                    }
                 });
                 this.dispatchEvent(event)
             });

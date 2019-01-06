@@ -43,7 +43,7 @@ io.on('connection', function (socket) {
 
 });
 
-const gameArea = new AreaClass(10, 10);
+const gameArea = new AreaClass(50, 50);
 
 let Gamer1 = new OwnerClass({name: "Gamer1"});
 let Gamer2 = new OwnerClass({name: "Gamer2"});
@@ -55,7 +55,7 @@ const gameClass = new GameClass({
 });
 //--------------------
 
-const F_0_0 = gameArea.getFieldAreaClass(0, 0);
+const F_0_0 = gameArea.getFieldAreaClass(15, 10);
 
 const okret_1_1 = new ObjectClass({
     name: "Okręt 1-1",
@@ -69,7 +69,7 @@ F_0_0.addObject(okret_1_1);
 
 //---------------
 
-const F_0_4 = gameArea.getFieldAreaClass(0, 9);
+const F_0_4 = gameArea.getFieldAreaClass(18, 14);
 
 const w_2_1 = new WeaponClass({
     owner: Gamer2,
@@ -80,7 +80,7 @@ w_2_1.setMagazine(1);
 
 const okret_2_1 = new ObjectClass({
     name: "Okręt 2-1",
-    rangeView: 5,
+    rangeView: 3,
     rangeMove: 2,
     maxWeapons: 1,
     owner: Gamer2

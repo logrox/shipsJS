@@ -114,7 +114,7 @@ class ObjectClass {
         if (ownerClass.getOwner() === this.getOwner()) {
             return {
                 name: this.name,
-                owner: this.getOwner().uuid,
+                owner: true,
                 cuirass: this.cuirass,
                 shield: this.shield,
                 rangeView: this.rangeView,
@@ -124,7 +124,7 @@ class ObjectClass {
 
         return {
             name: this.name,
-            owner: this.getOwner().uuid,
+            owner: false,
             cuirass: this.cuirass,
             shield: this.shield,
         }
