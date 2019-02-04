@@ -1,5 +1,6 @@
 let express = require('express');
 const app = express();
+const uuid = require('./server/helpers/uuid')
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
@@ -31,96 +32,149 @@ app.get('/', function (req, res) {
     res.redirect('/index.html');
 });
 
+io.use((socket, next) => {
+    //todo tu sprawdzic czy istnieje sesja
+    console.log('todo tu sprawdzic czy istnieje sesja');
 
-io.on('connection', function (socket) {
-    //socket.emit('news', {hello: 'world connection'});
-    socket.on('my other event', function (data) {
-        console.log(49, data);
-        socket.emit('area:get', [{test: "ups ok"}]);
-        socket.emit('news', ["dzila"])
-    });
-
-
+    next();
 });
 
+
+const sessionIDs = new Map();
 const gameArea = new AreaClass(50, 50);
 
-let Gamer1 = new OwnerClass({name: "Gamer1"});
-let Gamer2 = new OwnerClass({name: "Gamer2"});
-console.log(Gamer1.uuid);
-console.log(Gamer2.uuid);
 const gameClass = new GameClass({
     area: gameArea,
-    owners: [Gamer1, Gamer2]
-});
-//--------------------
-
-const F_0_0 = gameArea.getFieldAreaClass(15, 10);
-
-const okret_1_1 = new ObjectClass({
-    name: "Okręt 1-1",
-    rangeView: 5,
-    shield: 6,
-    rangeMove: 2,
-    owner: Gamer1
+    owners: []
 });
 
-F_0_0.addObject(okret_1_1);
+io.on('connection', function (client) {
+    let userId = null;
+    let user = null;
 
-//---------------
+    client.use(function (payload, next) {
+        if (userId === null || user === null) {
+            next();
+            return void 0;
+        }
 
-const F_0_4 = gameArea.getFieldAreaClass(18, 14);
+        payload.push({userUuid:user.userUuid});
+        next();
 
-const w_2_1 = new WeaponClass({
-    owner: Gamer2,
-    shield: 5,
-    rangeAttack: 5
+    });
+    let apiProps = {
+        io: client,
+        gameClass,
+        prefix: ''
+    }
+
+    const area = new apiArea(apiProps);
+
+    client.on('authorization', function (payload, callback) {
+        console.log(payload);
+        if (payload.sessionUuid) {
+            const founding = Array.from(sessionIDs.keys()).find(value => value.sessionUuid === payload.sessionUuid);
+            if (founding) {
+                userId = founding.sessionUuid;
+                user = sessionIDs.get(founding);
+                callback({
+                    sessionUuid: founding.sessionUuid
+                });
+            } else {
+                callback({
+                    sessionUuid: null
+                });
+            }
+        } else if (payload.username && payload.key) {
+
+            let key = `${payload.username}@${payload.key}`;
+
+            const founding = Array.from(sessionIDs.keys()).find(value => value.user === key);
+            if (founding) {
+                callback({
+                    sessionUuid: founding.sessionUuid
+                });
+            } else {
+
+                const gamer = new OwnerClass({name: "Gamer1"});
+
+                const object = new ObjectClass({
+                    name: "Okręt",
+                    rangeView: 5,
+                    shield: 6,
+                    rangeMove: 2,
+                    owner: gamer
+                });
+                let field;
+
+                switch (sessionIDs.size) {
+                    case 0: {
+                        field = gameArea.getFieldAreaClass(0, 0);
+                        break
+                    }
+                    case 1: {
+                        field = gameArea.getFieldAreaClass(49, 0);
+                        break
+                    }
+                    case 2: {
+                        field = gameArea.getFieldAreaClass(0, 49);
+                        break
+                    }
+                    case 3: {
+                        field = gameArea.getFieldAreaClass(49, 49);
+                        break
+                    }
+                    default:
+                        throw new Error("ops");
+
+                }
+
+                field.addObject(object);
+
+                gameClass.addOwner(gamer);
+
+                const userStorage = {
+                    userUuid: gamer.uuid
+                };
+                let sessionUuid = uuid();
+
+                userId = sessionUuid;
+                user = userStorage;
+
+                sessionIDs.set({
+                    user: `${payload.username}@${payload.key}`,
+                    sessionUuid
+                }, userStorage);
+
+                callback({sessionUuid});
+            }
+
+        }
+
+    });
+
 });
-w_2_1.setMagazine(1);
-
-const okret_2_1 = new ObjectClass({
-    name: "Okręt 2-1",
-    rangeView: 3,
-    rangeMove: 2,
-    maxWeapons: 1,
-    owner: Gamer2
-});
-
-const wIndex = okret_2_1.addWeapon(w_2_1);
-
-const smoke = new SmokescreenClass({
-    lifeCircle: 1,
-    owner: Gamer2
-});
 
 
-F_0_4.addObject(okret_2_1);
-F_0_4.addModifier(smoke);
+//F_0_4.addModifier(smoke);
 
 //------------------------
 
 
-gameClass.lifeCircle(Gamer1);
-gameClass.action_move(okret_1_1, 0, 2);
-
-gameClass.lifeCircle(Gamer2);
-gameClass.action_move(okret_2_1, 0, 7);
-
-gameClass.lifeCircle(Gamer1);
-gameClass.action_move(okret_1_1, 0, 3);
-
-gameClass.lifeCircle(Gamer2);
-gameClass.action_shot(okret_2_1, wIndex, 0, 3);
+// gameClass.lifeCircle(Gamer1);
+//gameClass.action_move(okret_1_1, 0, 2);
+//
+// gameClass.lifeCircle(Gamer2);
+// gameClass.action_move(okret_2_1, 0, 7);
+//
+// gameClass.lifeCircle(Gamer1);
+// gameClass.action_move(okret_1_1, 0, 3);
+//
+// gameClass.lifeCircle(Gamer2);
+// gameClass.action_shot(okret_2_1, wIndex, 0, 3);
 
 // const renderGamer1 = gameClass.render(Gamer1);
- const renderGamer2 = gameClass.render(Gamer2);
 
-
-const area = new apiArea({
-    io,
-    gameClass,
-    prefix: 'game'
-});
 
 /*
 

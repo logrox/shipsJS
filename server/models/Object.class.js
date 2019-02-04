@@ -1,4 +1,5 @@
 const EventClass = require('./Event.class');
+const uuid = require('../helpers/uuid');
 
 class ObjectClass {
 
@@ -32,6 +33,7 @@ class ObjectClass {
             throw new Error('props "owner" is required');
         }
         this.__owner = props.owner;
+        this.__uuid = uuid();
 
         this.__fieldAreaClass = null;
 
@@ -42,6 +44,7 @@ class ObjectClass {
     setInFieldArea(fieldAreaClass) {
         this.__fieldAreaClass = fieldAreaClass;
     }
+
     getFieldArea() {
         return this.__fieldAreaClass
     }
@@ -116,8 +119,10 @@ class ObjectClass {
                 name: this.name,
                 owner: true,
                 cuirass: this.cuirass,
+                uuid: this.__uuid,
                 shield: this.shield,
                 rangeView: this.rangeView,
+                rangeMove: this.rangeMove,
                 weapon: this.weapons.length > 0 ? this.weapons.map(weapon => weapon.render()) : this.weapons
             }
         }

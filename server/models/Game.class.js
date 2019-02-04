@@ -3,10 +3,14 @@ class GameClass {
 
     constructor({area, owners} = {}) {
         this.__area = area;
-        this.__owners = owners;
+        this.__owners = owners || [];
 
         this._roundCount = 0;
         this._roundWhenFinish = Infinity;
+    }
+
+    addOwner(owner){
+        this.__owners.push(owner);
     }
 
     action_move(objectClass, x, y) {
