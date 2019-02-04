@@ -1,4 +1,4 @@
-export class FieldInfo extends HTMLElement{
+export class FieldInfo extends HTMLElement {
     static get componentName() {
         return "c-field-info";
     };
@@ -15,27 +15,38 @@ export class FieldInfo extends HTMLElement{
         this.__init();
     }
 
-    __init(){
+    __init() {
 
         const container = document.createElement('div');
 
-        const divTitle =  document.createElement('p.title');
-        this.__divTitle = divTitle;
+        const divTitle = document.createElement('p');
+        this.__spanTitle = divTitle;
         container.appendChild(divTitle);
 
-        const divOwner = document.createElement('p.owner');
-        this.__owner = divOwner;
+        const divOwner = document.createElement('p');
+        this.__spanOwner = divOwner;
         container.appendChild(divOwner);
 
-        const divArmour = document.createElement('p.armour');
-        this.__divArmour = divArmour;
+        const divArmour = document.createElement('p');
+        this.__spanArmour = divArmour;
         container.appendChild(divArmour);
 
-        const divShield = document.createElement('p.shield');
-        this.__divShield = divShield;
+        const divShield = document.createElement('p');
+
+        this.__spanShield = divShield;
         container.appendChild(divShield);
 
         this.__shadow.appendChild(container);
+
+    }
+
+    setData(props) {
+
+        const {title, owner, armour, shield} = props || {};
+        this.__spanTitle.textContent = title || "-";
+        this.__spanOwner.textContent = owner || "-";
+        this.__spanArmour.textContent = armour || "-";
+        this.__spanShield.textContent = shield || "-";
 
     }
 }

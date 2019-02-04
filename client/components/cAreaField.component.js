@@ -13,8 +13,10 @@ export class AreaField extends HTMLElement {
     };
 
 
+
     constructor() {
         super();
+        this.__axis = {x: NaN, y: NaN};
         this.__field = null;
         this.__dateTimeChange = 0;
         this.__cellData = null;

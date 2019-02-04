@@ -1,6 +1,10 @@
 import '../components/buttonUuid.component.js';
 import {AreaMap} from '../components/cAreaMap.component.js';
 import {FieldInfo} from '../components/cFieldInfo.component.js';
+import {loginComponent} from '../components/login.component.js';
+
+
+import {authorization} from '../api/authorization.api.js'
 
 window.addEventListener('load', () => {
 
@@ -8,6 +12,9 @@ window.addEventListener('load', () => {
 
     const buttonUuid = document.createElement('button-uuid');
     const areaMap = document.createElement(AreaMap.componentName);
+
+    const fieldInfo = document.createElement(FieldInfo.componentName);
+
     areaMap.init(50, 50);
 
     buttonUuid.addEventListener('getUuid', (props) => {
@@ -26,12 +33,53 @@ window.addEventListener('load', () => {
     main.append(areaMap);
 
     areaMap.addEventListener(AreaMap.eventFieldClick, evt => {
-        console.log(
-            evt.detail)
+        let {object, axis} = evt.detail || {};
+        console.log(axis);
+        if (object) {
+            fieldInfo.setData({
+                title: "Statek",
+                owner: object.owner ? "Tak" : "Nie",
+                armour: object.cuirass,
+                shield: object.shield,
+            })
+        } else {
+            fieldInfo.setData(null);
+        }
+
     });
 
-    const fieldInfo = document.createElement(FieldInfo.tagName);
+    //todo brakuje okreslenia jaki dystans można pokonać w ramach 1 akcji
+    const loginForm = document.createElement(loginComponent.componentName);
+    loginForm.addEventListener('login', evt => {
+
+        if (evt.detail) {
+            const {key, username} = evt.detail.payload;
+
+            authorization({username, key}, () => {
+                main.removeChild(loginForm);
+            });
+        }
+
+    });
+
     main.appendChild(fieldInfo);
+
+
+    let sessionUuid = window.sessionStorage.getItem("sessionUuid");
+    if (sessionUuid) {
+        authorization({sessionUuid}, (response) => {
+            if (response.sessionUuid === null) {
+
+                console.log(response);
+                main.appendChild(loginForm);
+            }
+        });
+    } else {
+
+        main.appendChild(loginForm);
+
+    }
+
 
     /*//Template
 
