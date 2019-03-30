@@ -83,7 +83,7 @@ export class AreaMap extends HTMLElement {
         cellsData.forEach((cellData) => {
             const key = `${cellData.axis.x};${cellData.axis.y}`;
             const areaField = this.___areaMap.get(key);
-            areaField.onUpdate(cellData, dateTimeChange);
+            areaField.update(cellData, dateTimeChange);
             return areaField;
 
         });

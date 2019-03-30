@@ -33,6 +33,15 @@ class Area extends Crud {
         }
     }
 
+    onUpdated(ownerClass = null) {
+        if (ownerClass === null) {
+            throw new Error("ownerClass is require");
+        }
+        let render = this.__gameClass.render(ownerClass);
+
+        this._socket.emit(`${this._prefix}@updated`, {data: render, error: null});
+    }
+
 
 }
 

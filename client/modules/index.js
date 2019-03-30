@@ -5,6 +5,8 @@ import {loginComponent} from '../components/login.component.js';
 
 
 import {authorization} from '../api/authorization.api.js'
+import {listenerUpdatedArea} from '../api/area.api.js'
+
 
 window.addEventListener('load', () => {
 
@@ -79,7 +81,9 @@ window.addEventListener('load', () => {
         main.appendChild(loginForm);
 
     }
-
+    const removeUpdateAreaFN = listenerUpdatedArea((data, dateTimeChange) => {
+        areaMap.updateCells(data, dateTimeChange);
+    });
 
     /*//Template
 

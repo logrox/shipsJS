@@ -10,6 +10,7 @@ class Client {
     constructor(props) {
         this.__io = props.clientIo;
         this.__gameClass = props.gameClass;
+        this.__apiArea = null;
 
         this._owner = new OwnerClass({name: "Gamer1"});
         const object = new ObjectClass({
@@ -50,6 +51,7 @@ class Client {
 
     setNewIo(clientIo){
         this.__io = clientIo;
+        this.__initSocketRequest();
     }
 
 
@@ -60,8 +62,9 @@ class Client {
             gameClass: this.__gameClass,
         };
 
-        const area = new apiArea(apiProps);
+        this.__apiArea = new apiArea(apiProps);
 
+        this.__apiArea.onUpdated(this._owner);
 
     }
 
