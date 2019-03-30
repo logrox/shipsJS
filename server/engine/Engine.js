@@ -19,9 +19,9 @@ class Engine {
         this.__clients = new Map();
     }
 
-    reConnect({key, clientIo}){
-        const __clients= this.__clients.get(key);
-        if(__clients){
+    reConnect({key, clientIo}) {
+        const __clients = this.__clients.get(key);
+        if (__clients) {
 
             __clients.client.setNewIo(clientIo);
             return true;
@@ -47,10 +47,12 @@ class Engine {
         if (this.__clients.size === 2) {
 
             //todo dodac timeout na 3000
+            setTimeout(() => {
+                this.__clients.forEach(map_client => {
+                    map_client.client.startGame();
+                });
+            }, 3000)
 
-            this.__clients.forEach(map_client => {
-                map_client.client.startGame();
-            });
         }
 
         return client.getOwnerUuid();

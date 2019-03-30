@@ -15,7 +15,7 @@ class Client {
         this._owner = new OwnerClass({name: "Gamer1"});
         const object = new ObjectClass({
             name: "Okręt",
-            rangeView: 5,
+            rangeView: 3 + props.count,
             shield: 6,
             rangeMove: 2,
             owner: this._owner
@@ -25,11 +25,11 @@ class Client {
 
         switch (props.count) {
             case 0: {
-                field = gameArea.getFieldAreaClass(0, 0);
+                field = gameArea.getFieldAreaClass(0, 2);
                 break
             }
             case 1: {
-                field = gameArea.getFieldAreaClass(49, 0);
+                field = gameArea.getFieldAreaClass(4, 4);
                 break
             }
             case 2: {

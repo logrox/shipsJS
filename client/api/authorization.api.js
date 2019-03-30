@@ -1,7 +1,7 @@
 import {connection} from './socket.js'
-
+const socket = connection();
 export function authorization({username, key, sessionUuid}, callback) {
-    const socket = connection();
+
 
     socket.emit('authorization', {username, key, sessionUuid}, (response) => {
         console.log("authorization", response);

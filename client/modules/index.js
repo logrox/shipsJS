@@ -82,7 +82,7 @@ window.addEventListener('load', () => {
 
     }
     const removeUpdateAreaFN = listenerUpdatedArea((data, dateTimeChange) => {
-        areaMap.updateCells(data, dateTimeChange);
+        areaMap.updateCells(data.data, dateTimeChange);
     });
 
     /*//Template
