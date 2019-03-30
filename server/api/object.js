@@ -26,4 +26,4 @@ class Object extends Crud {
 
 }
 
-module.exports = Area;
+module.exports = Object;

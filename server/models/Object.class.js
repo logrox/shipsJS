@@ -39,6 +39,11 @@ class ObjectClass {
 
         this.__owner.addObject(this);
 
+
+    }
+
+    getUuid() {
+        return this.__uuid;
     }
 
     setInFieldArea(fieldAreaClass) {

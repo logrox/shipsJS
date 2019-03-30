@@ -4,15 +4,15 @@ const uuid = require('./server/helpers/uuid')
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
-const ObjectClass = require('./server/models/Object.class');
-const OwnerClass = require('./server/models/Owner.class');
-const WeaponClass = require('./server/models/Weapon.class');
-const FieldAreaClass = require('./server/models/FieldArea.class');
-const {BombClass, SmokescreenClass} = require('./server/models/Modifier.class');
-const AreaClass = require('./server/models/Area.class');
-const GameClass = require('./server/models/Game.class');
+// const ObjectClass = require('./server/models/Object.class');
+// const OwnerClass = require('./server/models/Owner.class');
+// const WeaponClass = require('./server/models/Weapon.class');
+// const FieldAreaClass = require('./server/models/FieldArea.class');
+// const {BombClass, SmokescreenClass} = require('./server/models/Modifier.class');
+// const AreaClass = require('./server/models/Area.class');
+// const GameClass = require('./server/models/Game.class');
+const Engine = require('./server/engine/Engine');
 
-const apiArea = require('./server/api/area');
 
 server.listen(80);
 
@@ -41,42 +41,38 @@ io.use((socket, next) => {
 
 
 const sessionIDs = new Map();
-const gameArea = new AreaClass(50, 50);
 
-const gameClass = new GameClass({
-    area: gameArea,
-    owners: []
+let engine = new Engine({
+    serverIo: io,
 });
 
 io.on('connection', function (client) {
-    let userId = null;
+    let sessionUuid = null;
     let user = null;
 
     client.use(function (payload, next) {
-        if (userId === null || user === null) {
+        if (sessionUuid === null || user === null) {
             next();
             return void 0;
         }
 
-        payload.push({userUuid:user.userUuid});
+        payload.push({userUuid: user.userUuid});
         next();
 
     });
-    let apiProps = {
-        io: client,
-        gameClass,
-        prefix: ''
-    }
 
-    const area = new apiArea(apiProps);
 
     client.on('authorization', function (payload, callback) {
         console.log(payload);
         if (payload.sessionUuid) {
             const founding = Array.from(sessionIDs.keys()).find(value => value.sessionUuid === payload.sessionUuid);
             if (founding) {
-                userId = founding.sessionUuid;
+                sessionUuid = founding.sessionUuid;
                 user = sessionIDs.get(founding);
+                engine.reConnect({
+                    key: sessionUuid,
+                    clientIo: client
+                });
                 callback({
                     sessionUuid: founding.sessionUuid
                 });
@@ -91,60 +87,37 @@ io.on('connection', function (client) {
 
             const founding = Array.from(sessionIDs.keys()).find(value => value.user === key);
             if (founding) {
+                sessionUuid = founding.sessionUuid;
+                user = sessionIDs.get(founding);
+
+                engine.reConnect({
+                    key: sessionUuid,
+                    clientIo: client
+                });
+
                 callback({
                     sessionUuid: founding.sessionUuid
                 });
             } else {
 
-                const gamer = new OwnerClass({name: "Gamer1"});
-
-                const object = new ObjectClass({
-                    name: "Okręt",
-                    rangeView: 5,
-                    shield: 6,
-                    rangeMove: 2,
-                    owner: gamer
-                });
-                let field;
-
-                switch (sessionIDs.size) {
-                    case 0: {
-                        field = gameArea.getFieldAreaClass(0, 0);
-                        break
-                    }
-                    case 1: {
-                        field = gameArea.getFieldAreaClass(49, 0);
-                        break
-                    }
-                    case 2: {
-                        field = gameArea.getFieldAreaClass(0, 49);
-                        break
-                    }
-                    case 3: {
-                        field = gameArea.getFieldAreaClass(49, 49);
-                        break
-                    }
-                    default:
-                        throw new Error("ops");
-
-                }
-
-                field.addObject(object);
-
-                gameClass.addOwner(gamer);
 
                 const userStorage = {
-                    userUuid: gamer.uuid
+                    userUuid: null
                 };
-                let sessionUuid = uuid();
+                sessionUuid = uuid();
 
-                userId = sessionUuid;
                 user = userStorage;
 
                 sessionIDs.set({
                     user: `${payload.username}@${payload.key}`,
                     sessionUuid
                 }, userStorage);
+
+
+                userStorage.userUuid = engine.addConnection({
+                    key: sessionUuid,
+                    clientIo: client
+                });
 
                 callback({sessionUuid});
             }

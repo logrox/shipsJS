@@ -34,7 +34,7 @@ window.addEventListener('load', () => {
 
     areaMap.addEventListener(AreaMap.eventFieldClick, evt => {
         let {object, axis} = evt.detail || {};
-        console.log(axis);
+        console.log({object, axis});
         if (object) {
             fieldInfo.setData({
                 title: "Statek",

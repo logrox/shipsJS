@@ -94,6 +94,9 @@ class GameClass {
         return this.__owners.find(value => value.getOwner().uuid === uuid) || null;
     }
 
+    getArea() {
+        return this.__area;
+    }
     getFields(ownerClass) {
     }
 

@@ -9,5 +9,8 @@ export function getArea(uuid, callback) {
     /*socketGame.emit("login", {dane: "brak"}, response => {
         console.log(response);
     })*/
+    socketGame.on('area',(response)=>{
+        console.log('response => ',response);
+    })
 
 }

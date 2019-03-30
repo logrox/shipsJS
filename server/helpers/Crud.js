@@ -7,17 +7,17 @@ class Crud {
 
         //socket.on('connect', (handle) => {
         socket
-            .on(`get`, (payload, callback) => this.get(payload, callback))
-            .on(`find`, (data, callback) => this.find(data, callback, true))
-            .on(`create`, (data, callback) => this.create(data, callback, true))
-            .on(`update`, (data, callback) => this.update(data, callback, true))
-            .on(`delete`, (data, callback) => this.delete(data, callback, true));
+            .on(`${this._prefix}@get`, (payload, callback) => this.onGet(payload, callback))
+            .on(`${this._prefix}@find`, (data, callback) => this.onFind(data, callback, true))
+            .on(`${this._prefix}@create`, (data, callback) => this.onCreate(data, callback, true))
+            .on(`${this._prefix}@update`, (data, callback) => this.onUpdate(data, callback, true))
+            .on(`${this._prefix}@delete`, (data, callback) => this.onDelete(data, callback, true));
 
         // })
 
     }
 
-    get(payload, callback) {
+    onGet(payload, callback) {
         callback({
             error: 'method get is not implemented',
             data: null
@@ -25,7 +25,7 @@ class Crud {
 
     }
 
-    find(payload, notImplement = false) {
+    onFind(payload, notImplement = false) {
         if (notImplement) {
             return {
                 error: Error('method find is not implemented'),
@@ -34,7 +34,7 @@ class Crud {
         }
     }
 
-    update(payload, notImplement = false) {
+    onUpdate(payload, notImplement = false) {
         if (notImplement) {
             return {
                 error: Error('method update is not implemented'),
@@ -44,7 +44,7 @@ class Crud {
 
     }
 
-    create(payload, notImplement = false) {
+    onCreate(payload, notImplement = false) {
         if (notImplement) {
             return {
                 error: Error('method create is not implemented'),
@@ -54,7 +54,7 @@ class Crud {
 
     }
 
-    delete(payload, notImplement = false) {
+    onDelete(payload, notImplement = false) {
         if (notImplement) {
             return {
                 error: Error('method delete is not implemented'),
