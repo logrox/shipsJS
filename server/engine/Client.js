@@ -11,6 +11,7 @@ class Client {
         this.__io = props.clientIo;
         this.__gameClass = props.gameClass;
         this.__apiArea = null;
+        this.__apiObject = null;
 
         this._owner = new OwnerClass({name: "Gamer1"});
         const object = new ObjectClass({
@@ -46,12 +47,21 @@ class Client {
         }
 
         field.addObject(object);
-
+        this.__gameClass.addOwner(this._owner);
     }
 
-    setNewIo(clientIo){
+    setNewIo(clientIo) {
         this.__io = clientIo;
         this.__initSocketRequest();
+    }
+
+    objectUpdateMove(payload, callback) {
+        const findObject = this._owner.objects.find(value => value.getUuid() === payload.uuid);
+        if(findObject){
+            this.__gameClass.lifeCircle(this._owner);
+            let result = this.__gameClass.action_move(findObject,payload.axis.x,payload.axis.y);
+            //todo
+        }
     }
 
 
@@ -63,6 +73,9 @@ class Client {
         };
 
         this.__apiArea = new apiArea(apiProps);
+        this.__apiObject = new apiObject(apiProps);
+
+        this.__apiObject.setUpdateListener(this.objectUpdateMove.bind(this));
 
         this.__apiArea.onUpdated(this._owner);
 

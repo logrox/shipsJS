@@ -2,24 +2,31 @@ const Crud = require('../helpers/Crud');
 
 class Object extends Crud {
     constructor({gameClass, io, prefix}) {
-        super({io, prefix});
+        super({io, prefix: "move"});
+
+        this.__updateListener = () => ({error: `Not find implemented`, data: null});
+
+        this.userUuid = null;
+        io.use((payload, next) => {
+
+            if (payload[3]) {
+                this.userUuid = payload[3].userUuid;
+            }
+            next();
+        });
         this.__gameClass = gameClass;
     }
 
 
-    move(payload, callback) {
-        const {uuid} = payload;
-        const ownerClass = this.__gameClass.getOwner(uuid);
-        if (ownerClass) {
-            let render = this.__gameClass.render(ownerClass);
-            try {
-                callback({data: render, error: null});
-            } catch (e) {
-                console.log(e)
-            }
+    onUpdate(payload, callback) {
 
-        } else {
-            callback({error: `Not find owner \"${uuid}\"`, data: null});
+        this.__updateListener(payload, callback)
+    }
+
+    setUpdateListener(callback) {
+        this.__updateListener = callback;
+        return () => {
+            this.__updateListener = () => ({error: `Not find implemented`, data: null});
         }
     }
 

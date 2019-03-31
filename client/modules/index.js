@@ -2,6 +2,7 @@ import '../components/buttonUuid.component.js';
 import {AreaMap} from '../components/cAreaMap.component.js';
 import {FieldInfo} from '../components/cFieldInfo.component.js';
 import {loginComponent} from '../components/login.component.js';
+import {actionMoveComponent} from '../components/actionMove.component.js';
 
 
 import {authorization} from '../api/authorization.api.js'
@@ -12,23 +13,36 @@ window.addEventListener('load', () => {
 
     const main = document.querySelector('main');
 
-    const buttonUuid = document.createElement('button-uuid');
+    // const buttonUuid = document.createElement('button-uuid');
     const areaMap = document.createElement(AreaMap.componentName);
-
     const fieldInfo = document.createElement(FieldInfo.componentName);
+    const actionMove = document.createElement(actionMoveComponent.componentName);
 
     areaMap.init(50, 50);
 
-    buttonUuid.addEventListener('getUuid', (props) => {
-        if (!props.detail.error) {
-            areaMap.updateCells(props.detail.data, props.detail.payload.dateTimeChange);
-        } else {
-            console.error(props.detail.error);
+    // buttonUuid.addEventListener('getUuid', (props) => {
+    //     if (!props.detail.error) {
+    //         areaMap.updateCells(props.detail.data, props.detail.payload.dateTimeChange);
+    //     } else {
+    //         console.error(props.detail.error);
+    //     }
+    // });
+
+
+    //main.append(buttonUuid);
+    main.append(actionMove);
+
+    areaMap.addEventListener(AreaMap.eventFieldClick, evt => {
+        let {object, axis} = evt.detail || {};
+        if (object && object.uuid) {
+            return actionMove.putObject(object.uuid);
+        } else if (object === null) {
+            return actionMove.putAxis(axis);
         }
+
+        actionMove.clear();
+
     });
-
-
-    main.append(buttonUuid);
 
     main.append(document.createElement('br'));
 
@@ -50,7 +64,7 @@ window.addEventListener('load', () => {
 
     });
 
-    //todo brakuje okreslenia jaki dystans można pokonać w ramach 1 akcji
+
     const loginForm = document.createElement(loginComponent.componentName);
     loginForm.addEventListener('login', evt => {
 
