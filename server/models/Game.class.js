@@ -39,7 +39,7 @@ class GameClass {
         // Obliczenie dystansu do docelowego obszaru
         const distance = field.computedDistance(targetField);
 
-        if (distance.x <= rangeMove && distance.y <= rangeMove) {
+        if (field !== targetField && distance.x <= rangeMove && distance.y <= rangeMove ) {
 
             // Ustawienie obiektu na wybranym obszarze (zwraca obiekt na obszarze albo null)
             let objectOnField = targetField.addObject(objectClass);

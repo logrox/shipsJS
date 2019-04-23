@@ -7,8 +7,8 @@ class OwnerClass {
 
         this.name = props.name || "no name";
         this.gold = 0;
-        this.__maxAction = 1;
-        this.action = 1;
+        this.__maxAction = 0;
+        this.action = 0;
         //Lista posiadanych obiektów
         this.objects = [];
         this.uuid = uuid();

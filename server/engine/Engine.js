@@ -15,7 +15,7 @@ class Engine {
 
     constructor(props) {
         this.__serverIo = props.serverIo;
-
+        this.__controllLifeCircle = [];
         this.__clients = new Map();
     }
 
@@ -44,16 +44,34 @@ class Engine {
         this.__clients.set(key, {
             client
         });
+
         if (this.__clients.size === 2) {
 
             //todo dodac timeout na 3000
             setTimeout(() => {
-                this.__clients.forEach(map_client => {
+                let first = null;
+                this.__clients.forEach((map_client,key) => {
+                    if(!first){
+                        first =  map_client;
+                    }
+                    this.__controllLifeCircle.push(map_client.client._owner.uuid);
                     map_client.client.startGame();
                 });
+                first.client._owner.lifeCircle(first.client._owner);
             }, 3000)
 
         }
+        client.nextLifeCircleOwner = (keyToRemove) => {
+            //todo wykasować z listy przesłany klucz a następnie
+            //todo znaleść pasujący owner uuid w  this.__clients i wykonać  .lifeCircle(...)
+            console.log(this.__controllLifeCircle)
+        };
+
+        client.emitAllUpdateArea = () => {
+            this.__clients.forEach((value, key1) => {
+                value.client.onUpdateArea();
+            })
+        };
 
         return client.getOwnerUuid();
     }

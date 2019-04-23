@@ -14,6 +14,7 @@ class Client {
         this.__apiObject = null;
 
         this._owner = new OwnerClass({name: "Gamer1"});
+
         const object = new ObjectClass({
             name: "Okręt",
             rangeView: 3 + props.count,
@@ -21,16 +22,27 @@ class Client {
             rangeMove: 2,
             owner: this._owner
         });
+
+        const object2 = new ObjectClass({
+            name: "Okręt2",
+            rangeView: 3 + props.count,
+            shield: 6,
+            rangeMove: 2,
+            owner: this._owner
+        });
         let field = null;
+        let field2 = null;
         const gameArea = props.gameClass.getArea();
 
         switch (props.count) {
             case 0: {
-                field = gameArea.getFieldAreaClass(0, 2);
+                field = gameArea.getFieldAreaClass(0, 0);
+                field2 = gameArea.getFieldAreaClass(0, 2);
                 break
             }
             case 1: {
-                field = gameArea.getFieldAreaClass(4, 4);
+                field = gameArea.getFieldAreaClass(4, 2);
+                field2 = gameArea.getFieldAreaClass(4, 4);
                 break
             }
             case 2: {
@@ -45,8 +57,8 @@ class Client {
                 throw new Error("ops");
 
         }
-
         field.addObject(object);
+        field2.addObject(object2);
         this.__gameClass.addOwner(this._owner);
     }
 
@@ -58,10 +70,33 @@ class Client {
     objectUpdateMove(payload, callback) {
         const findObject = this._owner.objects.find(value => value.getUuid() === payload.uuid);
         if(findObject){
-            this.__gameClass.lifeCircle(this._owner);
+            //this.__gameClass.lifeCircle(this._owner);
             let result = this.__gameClass.action_move(findObject,payload.axis.x,payload.axis.y);
-            //todo
+            const owner = findObject.getOwner();
+            if(result){
+
+                this.emitAllUpdateArea();
+
+                if(owner.action < 1){
+                    this.nextLifeCircleOwner(owner.uuid)
+                }
+            }
+
+
         }
+    }
+
+    onUpdateArea(){
+        this.__apiArea.onUpdated(this._owner);
+    }
+
+    // abstract  tworzona w Engine class
+    emitAllUpdateArea(){
+        return void 0;
+    }
+    // abstract tworzona w Engine class
+    nextLifeCircleOwner(uuid){
+        return void 0;
     }
 
 
@@ -77,7 +112,7 @@ class Client {
 
         this.__apiObject.setUpdateListener(this.objectUpdateMove.bind(this));
 
-        this.__apiArea.onUpdated(this._owner);
+        this.onUpdateArea();
 
     }
 

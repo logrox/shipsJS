@@ -85,6 +85,7 @@ class FieldAreaClass {
 
         if (this.__checkOwner(this.objectInArea)) {
             this.objectInArea = null;
+            this.owner = null;
         }
 
     }
