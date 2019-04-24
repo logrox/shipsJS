@@ -50,9 +50,9 @@ class Engine {
             //todo dodac timeout na 3000
             setTimeout(() => {
                 let first = null;
-                this.__clients.forEach((map_client,key) => {
-                    if(!first){
-                        first =  map_client;
+                this.__clients.forEach((map_client, key) => {
+                    if (!first) {
+                        first = map_client;
                     }
                     this.__controllLifeCircle.push(map_client.client._owner.uuid);
                     map_client.client.startGame();
@@ -62,8 +62,30 @@ class Engine {
 
         }
         client.nextLifeCircleOwner = (keyToRemove) => {
-            //todo wykasować z listy przesłany klucz a następnie
-            //todo znaleść pasujący owner uuid w  this.__clients i wykonać  .lifeCircle(...)
+
+            const indexOf = this.__controllLifeCircle.indexOf(keyToRemove);
+            if (~indexOf) {
+                this.__controllLifeCircle.splice(indexOf, 1);
+            }
+            if(this.__controllLifeCircle.length !== 0){
+                const uuid = this.__controllLifeCircle[0];
+                let findClient = null;
+                this.__clients.forEach(map_client => {
+                    if(map_client.client._owner.uuid === uuid){
+                        findClient = map_client.client;
+                    }
+                });
+                findClient && findClient._owner.lifeCircle(findClient._owner);
+            }else {
+                let first = null;
+                this.__clients.forEach((map_client, key) => {
+                    if (!first) {
+                        first = map_client;
+                    }
+                    this.__controllLifeCircle.push(map_client.client._owner.uuid);
+                });
+                first.client._owner.lifeCircle(first.client._owner);
+            }
             console.log(this.__controllLifeCircle)
         };
 

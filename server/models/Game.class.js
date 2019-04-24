@@ -21,11 +21,6 @@ class GameClass {
         if (owner.action < 1) {
             return false;
         }
-        // nagroda za ruch 1zł
-        owner.setGold(1);
-
-        // zmniejszenie o 1 liczbę dostępnych akcji
-        owner.setAction(-1);
 
         // Pobranie dystansu o jaki można przesunąć obiekt
         const rangeMove = objectClass.rangeMove;
@@ -40,6 +35,12 @@ class GameClass {
         const distance = field.computedDistance(targetField);
 
         if (field !== targetField && distance.x <= rangeMove && distance.y <= rangeMove ) {
+
+            // nagroda za ruch 1zł
+            owner.setGold(1);
+
+            // zmniejszenie o 1 liczbę dostępnych akcji
+            owner.setAction(-1);
 
             // Ustawienie obiektu na wybranym obszarze (zwraca obiekt na obszarze albo null)
             let objectOnField = targetField.addObject(objectClass);
