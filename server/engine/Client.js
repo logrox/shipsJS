@@ -13,7 +13,7 @@ class Client {
         this.__apiArea = null;
         this.__apiObject = null;
 
-        this._owner = new OwnerClass({name: "Gamer: "+props.count});
+        this._owner = new OwnerClass({name: props.username});
 
         const object = new ObjectClass({
             name: "Okręt 1",

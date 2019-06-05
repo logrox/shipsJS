@@ -40,13 +40,14 @@ class Engine {
     }
 
 
-    addConnection({key, clientIo}) {
+    addConnection({key, clientIo,username}) {
         const size = this.__clients.size;
 
         const client = new Client({
             gameClass,
             clientIo,
-            count: size
+            count: size,
+            username
         });
 
         this.__clients.set(key, {

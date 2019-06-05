@@ -16,7 +16,7 @@ export function listenerUpdatedArea(callback) {
 }
 
 socketGame.on('area@updated', (response) => {
-    const time = +new Date();
+    const time = Date.now();
     listenerUpdatedMap.forEach(value => {
         value(response, time)
     });

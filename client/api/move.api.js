@@ -7,7 +7,7 @@ export function actionMove(uuid, axis, callback) {
 
 
     socketGame.emit('move@update', {uuid, axis}, (response) => {
-        callback(response, +new Date());
+        callback(response, Date.now());
     });
 
 

@@ -1,4 +1,5 @@
 import {actionMove} from '../api/move.api.js';
+import {listenerUpdatedCommon} from '../api/common.api.js';
 
 export class actionMoveComponent extends HTMLElement {
     static get componentName() {
@@ -34,10 +35,22 @@ export class actionMoveComponent extends HTMLElement {
             }
 
         });
+        listenerUpdatedCommon((response, time)=>{
+
+        })
+
 
         shadow.appendChild(button);
         shadow.appendChild(this._span);
         shadow.appendChild(this._spanAxis);
+    }
+
+    /**
+     * @description Ustawia aktywność przycisku
+     * @param disabled: Boolean
+     */
+    disabledButton(disabled){
+
     }
 
     clear() {

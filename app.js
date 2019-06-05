@@ -74,11 +74,13 @@ io.on('connection', function (client) {
                     clientIo: client
                 });
                 callback({
-                    sessionUuid: founding.sessionUuid
+                    sessionUuid: founding.sessionUuid,
+                    username:founding.user.split('@')[0]
                 });
             } else {
                 callback({
-                    sessionUuid: null
+                    sessionUuid: null,
+                    username:null
                 });
             }
         } else if (payload.username && payload.key) {
@@ -96,7 +98,8 @@ io.on('connection', function (client) {
                 });
 
                 callback({
-                    sessionUuid: founding.sessionUuid
+                    sessionUuid: founding.sessionUuid,
+                    username:payload.username
                 });
             } else {
 
@@ -116,10 +119,11 @@ io.on('connection', function (client) {
 
                 userStorage.userUuid = engine.addConnection({
                     key: sessionUuid,
-                    clientIo: client
+                    clientIo: client,
+                    username:payload.username
                 });
 
-                callback({sessionUuid});
+                callback({sessionUuid,username:payload.username});
             }
 
         }

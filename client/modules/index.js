@@ -8,6 +8,9 @@ import {actionMoveComponent} from '../components/actionMove.component.js';
 import {authorization} from '../api/authorization.api.js'
 import {listenerUpdatedArea} from '../api/area.api.js'
 
+const store = {
+    username: null
+};
 
 window.addEventListener('load', () => {
 
@@ -78,6 +81,7 @@ window.addEventListener('load', () => {
             const {key, username} = evt.detail.payload;
 
             authorization({username, key}, () => {
+                store.username = username;
                 main.removeChild(loginForm);
             });
         }
@@ -94,6 +98,8 @@ window.addEventListener('load', () => {
 
                 console.log(response);
                 main.appendChild(loginForm);
+            }else {
+                store.username = response.username;
             }
         });
     } else {
