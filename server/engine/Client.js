@@ -13,10 +13,10 @@ class Client {
         this.__apiArea = null;
         this.__apiObject = null;
 
-        this._owner = new OwnerClass({name: "Gamer1"});
+        this._owner = new OwnerClass({name: "Gamer: "+props.count});
 
         const object = new ObjectClass({
-            name: "Okręt",
+            name: "Okręt 1",
             rangeView: 3 + props.count,
             shield: 6,
             rangeMove: 2,
@@ -24,7 +24,7 @@ class Client {
         });
 
         const object2 = new ObjectClass({
-            name: "Okręt2",
+            name: "Okręt 2",
             rangeView: 3 + props.count,
             shield: 6,
             rangeMove: 2,
@@ -80,16 +80,20 @@ class Client {
                 this.emitAllUpdateArea();
 
                 if (owner.action < 1) {
-                    this.nextLifeCircleOwner(owner.uuid)
+                    let circleOwner = this.nextLifeCircleOwner(owner.uuid);
+                    console.log(circleOwner);
+                    this.whoIsRound(circleOwner)
                 }
             }
-
-
         }
     }
 
     onUpdateArea() {
         this.__apiArea.onUpdated(this._owner);
+    }
+
+    whoIsRound(){
+        return void 0;
     }
 
     // abstract  tworzona w Engine class

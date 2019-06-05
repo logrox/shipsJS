@@ -27,9 +27,11 @@ export class actionMoveComponent extends HTMLElement {
                 axis: this.__axis,
             });
 
-            actionMove(this.__selectedObjectUuid, this.__axis, response => {
-                console.log(response)
-            });
+            if (this.__selectedObjectUuid && this.__axis) {
+                actionMove(this.__selectedObjectUuid, this.__axis, response => {
+                    console.log(response)
+                });
+            }
 
         });
 

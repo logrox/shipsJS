@@ -3,6 +3,8 @@ const GameClass = require('../models/Game.class');
 
 const Client = require('./Client');
 
+const apiCommon = require('../api/common');
+
 const gameArea = new AreaClass(50, 50);
 
 
@@ -17,6 +19,12 @@ class Engine {
         this.__serverIo = props.serverIo;
         this.__controllLifeCircle = [];
         this.__clients = new Map();
+
+        let apiProps = {
+            io: this.__serverIo,
+            gameClass: gameClass,
+        };
+        this.__apiCommon = new apiCommon(apiProps);
     }
 
     reConnect({key, clientIo}) {
@@ -58,6 +66,7 @@ class Engine {
                     map_client.client.startGame();
                 });
                 first.client._owner.lifeCircle(first.client._owner);
+                this.__apiCommon.emitWhoIsRound(first.client);
             }, 3000)
 
         }
@@ -67,16 +76,17 @@ class Engine {
             if (~indexOf) {
                 this.__controllLifeCircle.splice(indexOf, 1);
             }
-            if(this.__controllLifeCircle.length !== 0){
+            if (this.__controllLifeCircle.length !== 0) {
                 const uuid = this.__controllLifeCircle[0];
                 let findClient = null;
                 this.__clients.forEach(map_client => {
-                    if(map_client.client._owner.uuid === uuid){
+                    if (map_client.client._owner.uuid === uuid) {
                         findClient = map_client.client;
                     }
                 });
                 findClient && findClient._owner.lifeCircle(findClient._owner);
-            }else {
+                return findClient;
+            } else {
                 let first = null;
                 this.__clients.forEach((map_client, key) => {
                     if (!first) {
@@ -84,15 +94,19 @@ class Engine {
                     }
                     this.__controllLifeCircle.push(map_client.client._owner.uuid);
                 });
-                first.client._owner.lifeCircle(first.client._owner);
+                first && first.client._owner.lifeCircle(first.client._owner);
+                return first.client;
             }
-            console.log(this.__controllLifeCircle)
         };
 
         client.emitAllUpdateArea = () => {
             this.__clients.forEach((value, key1) => {
                 value.client.onUpdateArea();
             })
+        };
+
+        client.whoIsRound = (client) => {
+            this.__apiCommon.emitWhoIsRound(client);
         };
 
         return client.getOwnerUuid();

@@ -4,7 +4,7 @@ class Object extends Crud {
     constructor({gameClass, io, prefix}) {
         super({io, prefix: "move"});
 
-        this.__updateListener = () => ({error: `Not find implemented`, data: null});
+
 
         this.userUuid = null;
         io.use((payload, next) => {

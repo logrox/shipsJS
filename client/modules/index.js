@@ -32,6 +32,9 @@ window.addEventListener('load', () => {
     //main.append(buttonUuid);
     main.append(actionMove);
 
+    /**
+     * @description Odpowiada za przekazanie do actionMove informacji o wybranym obiekcie lub lokalizacja.
+     */
     areaMap.addEventListener(AreaMap.eventFieldClick, evt => {
         let {object, axis} = evt.detail || {};
         if (object && object.uuid) {
@@ -48,6 +51,9 @@ window.addEventListener('load', () => {
 
     main.append(areaMap);
 
+    /**
+     * @description Pobiera informacji o wybranym obiekcie.
+     */
     areaMap.addEventListener(AreaMap.eventFieldClick, evt => {
         let {object, axis} = evt.detail || {};
         console.log({object, axis});

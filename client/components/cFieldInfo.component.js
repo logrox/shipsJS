@@ -19,7 +19,7 @@ export class FieldInfo extends HTMLElement {
 
         const container = document.createElement('div');
 
-        const divTitle = document.createElement('p');
+        const divTitle = document.createElement('span');
         this.__spanTitle = divTitle;
         container.appendChild(divTitle);
 
@@ -27,13 +27,23 @@ export class FieldInfo extends HTMLElement {
         this.__spanOwner = divOwner;
         container.appendChild(divOwner);
 
-        const divArmour = document.createElement('p');
-        this.__spanArmour = divArmour;
-        container.appendChild(divArmour);
 
-        const divShield = document.createElement('p');
+        const containerArmour = document.createElement('div');
+        const divArmour = document.createElement('span');
+        const spanArmour = document.createElement('span');
+        this.__spanArmour = divArmour;
+        spanArmour.textContent = "Wytrzymałość: ";
+        containerArmour.appendChild(spanArmour);
+        containerArmour.appendChild(divArmour);
+        container.appendChild(containerArmour);
+
+        const divShield = document.createElement('span');
+        const titleShield = document.createElement('span');
+        titleShield.textContent = "Tarcza: ";
 
         this.__spanShield = divShield;
+
+        container.appendChild(titleShield);
         container.appendChild(divShield);
 
         this.__shadow.appendChild(container);
